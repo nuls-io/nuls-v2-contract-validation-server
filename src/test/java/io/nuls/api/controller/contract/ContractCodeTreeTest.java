@@ -41,32 +41,7 @@ import java.util.List;
  * @author: PierreLuo
  * @date: 2019-01-29
  */
-public class ContractCodeTreeTest {
-
-    private static String BASE;
-
-    private static void getBase() {
-        String serverHome = System.getProperty("contract.server.home");
-        if(StringUtils.isBlank(serverHome)) {
-            URL resource = ClassLoader.getSystemClassLoader().getResource("");
-            String classPath = resource.getPath();
-            File file = null;
-            try {
-                file = new File(URLDecoder.decode(classPath, "UTF-8"));
-            } catch (UnsupportedEncodingException e) {
-                Log.error(e);
-                file = new File(classPath);
-            }
-            BASE = file.getPath();
-        } else {
-            BASE = serverHome;
-        }
-    }
-
-    @BeforeClass
-    public static void startUp() throws Exception {
-        getBase();
-    }
+public class ContractCodeTreeTest extends Base{
 
     @Test
     public void genTree() {

@@ -67,12 +67,12 @@ public class RpcMethodInvoker {
                 rpcResultError.setData(error);
                 result.setError(rpcResultError);
             } else {
-                Log.error(e.getCause());
+                Log.error(e);
                 result = new RpcResult();
                 RpcResultError error = new RpcResultError();
                 error.setMessage("system error");
                 error.setCode("-32603");
-                error.setData(e.getCause().getMessage());
+                error.setData(e.getMessage());
                 result.setError(error);
             }
         }

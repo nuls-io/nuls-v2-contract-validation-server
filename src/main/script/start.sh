@@ -20,6 +20,7 @@ done
 
 SERVER_HOME="$( cd -P "$( dirname "$SOURCE"  )" && cd .. && pwd  )"
 
+export PATH="/usr/local/ant/apache-ant-1.10.6/bin:$PATH"
 export logdir=${SERVER_HOME}/logs
 
 CLASSPATH=${SERVER_HOME}

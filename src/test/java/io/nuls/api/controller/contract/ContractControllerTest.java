@@ -9,6 +9,7 @@ import io.nuls.server.ServerContext;
 import io.nuls.server.jsonrpc.controller.ContractController;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -24,31 +25,10 @@ import java.util.concurrent.TimeUnit;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-public class ContractControllerTest {
-
-    private static String BASE;
-
-    private static void getBase() {
-        String serverHome = System.getProperty("contract.server.home");
-        if(StringUtils.isBlank(serverHome)) {
-            URL resource = ClassLoader.getSystemClassLoader().getResource("");
-            String classPath = resource.getPath();
-            File file = null;
-            try {
-                file = new File(URLDecoder.decode(classPath, "UTF-8"));
-            } catch (UnsupportedEncodingException e) {
-                Log.error(e);
-                file = new File(classPath);
-            }
-            BASE = file.getPath();
-        } else {
-            BASE = serverHome;
-        }
-    }
+public class ContractControllerTest extends Base{
 
     @BeforeClass
     public static void startUp() throws Exception {
-        getBase();
         ContractValidationServerBootstrap.main(null);
     }
 
@@ -57,7 +37,6 @@ public class ContractControllerTest {
         FileInputStream in=  null;
         try {
             TimeUnit.SECONDS.sleep(5);
-            ContractController controller = SpringLiteContext.getBean(ContractController.class);
             List<Object> params = new ArrayList<>();
             String address = "tNULSeBaMyoghhJR8wA46u9B5vAiefYRhVct1Z";
             File file = new File(BASE + "/contract/code/nrc20_token.zip");
@@ -65,6 +44,8 @@ public class ContractControllerTest {
             params.add(ServerContext.main_chain_id);
             params.add(address);
             params.add("mockHeader," + Base64.getEncoder().encodeToString(IOUtils.toByteArray(in)));
+
+            ContractController controller = SpringLiteContext.getBean(ContractController.class);
             RpcResult rpcResult = controller.validateContractCode(params);
             System.out.println(rpcResult);
         } catch (FileNotFoundException e) {

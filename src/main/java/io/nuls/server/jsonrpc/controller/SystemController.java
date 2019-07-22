@@ -35,7 +35,7 @@ public class SystemController {
 
 
     @RpcMethod("getSystemInfo")
-    public RpcResult getHeaderByHeight() {
+    public RpcResult getHeaderByHeight(List<Object> params) {
         return RpcResult.success("jsonrpc ok");
     }
 
