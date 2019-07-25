@@ -12,7 +12,7 @@ if [ ! -d $srcdir ];then
     mkdir -p $srcdir
 fi
 
-logdir=$homedir/contract/logs
+logdir=$homedir/logs
 if [ ! -d $logdir ];then
     mkdir -p $logdir
 fi

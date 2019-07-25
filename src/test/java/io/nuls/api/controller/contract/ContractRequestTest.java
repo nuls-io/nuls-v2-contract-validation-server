@@ -23,10 +23,9 @@
  */
 package io.nuls.api.controller.contract;
 
-import io.nuls.core.core.ioc.SpringLiteContext;
+import io.nuls.core.parse.JSONUtils;
 import io.nuls.model.jsonrpc.RpcResult;
 import io.nuls.server.ServerContext;
-import io.nuls.server.jsonrpc.controller.ContractController;
 import io.nuls.server.utils.JsonRpcUtil;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
@@ -39,7 +38,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author: PierreLuo
@@ -50,7 +48,7 @@ public class ContractRequestTest extends Base{
     @Before
     public void before() {
         ServerContext.main_chain_id = 2;
-        ServerContext.wallet_url = "http://localhost:15151/";
+        ServerContext.wallet_url = "http://192.168.1.120:15151/";
     }
 
     @Test
@@ -58,7 +56,7 @@ public class ContractRequestTest extends Base{
         FileInputStream in=  null;
         try {
             List<Object> params = new ArrayList<>();
-            String address = "tNULSeBaMyoghhJR8wA46u9B5vAiefYRhVct1Z";
+            String address = "tNULSeBaN5LCjGeYeQS7JgyKbbPgQ1BPfNz6iP";
             File file = new File(BASE + "/contract/code/nrc20_token.zip");
             in = new FileInputStream(file);
             params.add(ServerContext.main_chain_id);
@@ -70,6 +68,46 @@ public class ContractRequestTest extends Base{
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            IOUtils.closeQuietly(in);
+        }
+
+    }
+
+    @Test
+    public void getContractCodeTree() {
+        FileInputStream in=  null;
+        try {
+            List<Object> params = new ArrayList<>();
+            String address = "tNULSeBaN5LCjGeYeQS7JgyKbbPgQ1BPfNz6iP";
+            params.add(ServerContext.main_chain_id);
+            params.add(address);
+
+            RpcResult rpcResult = JsonRpcUtil.request("getContractCodeTree", params);
+            System.out.println(JSONUtils.obj2PrettyJson(rpcResult));
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            IOUtils.closeQuietly(in);
+        }
+
+    }
+
+
+    @Test
+    public void getContractCode() {
+        FileInputStream in=  null;
+        try {
+            List<Object> params = new ArrayList<>();
+            String address = "tNULSeBaN5LCjGeYeQS7JgyKbbPgQ1BPfNz6iP";
+            params.add(ServerContext.main_chain_id);
+            params.add(address);
+            params.add("/contract/code/tNULSeBaN5LCjGeYeQS7JgyKbbPgQ1BPfNz6iP/src/io/nuls/contract/token/SimpleToken.java");
+
+            RpcResult rpcResult = JsonRpcUtil.request("getContractCode", params);
+            System.out.println(JSONUtils.obj2PrettyJson(rpcResult));
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             IOUtils.closeQuietly(in);
