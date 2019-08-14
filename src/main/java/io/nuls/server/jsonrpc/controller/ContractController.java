@@ -90,6 +90,30 @@ public class ContractController {
         VALIDATE_HOME = BASE + File.separator + "contract" + File.separator + "code" + File.separator;
     }
 
+    @RpcMethod("getContractAddressInfo")
+    public RpcResult getContractAddressInfo(List<Object> params) {
+        RpcResult result = new RpcResult();
+        try {
+            VerifyUtils.verifyParams(params, 2);
+            int chainId = (Integer) params.get(0);
+            String contractAddress = (String) params.get(1);
+            if (!AddressTool.validAddress(chainId, contractAddress)) {
+                result.setError(new RpcResultError(RpcErrorCode.PARAMS_ERROR, "[contractAddress] is inValid"));
+                return result;
+            }
+            ContractAddressInfoPo contractInfo = contractService.getContractAddressInfo(chainId, AddressTool.getAddress(contractAddress)).getData();
+            if (contractInfo == null) {
+                result.setError(new RpcResultError(RpcErrorCode.DATA_NOT_EXISTS));
+                return result;
+            }
+            result.setResult(contractInfo);
+        } catch (Exception e) {
+            Log.error(e);
+            result.setError(new RpcResultError(RpcErrorCode.PARAMS_ERROR, e.getMessage()));
+        }
+        return result;
+    }
+
     @RpcMethod("validateContractCode")
     public RpcResult validateContractCode(List<Object> params) {
 
