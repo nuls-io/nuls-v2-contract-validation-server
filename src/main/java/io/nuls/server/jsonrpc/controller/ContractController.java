@@ -101,10 +101,26 @@ public class ContractController {
                 result.setError(new RpcResultError(RpcErrorCode.PARAMS_ERROR, "[contractAddress] is inValid"));
                 return result;
             }
-            ContractAddressInfoPo contractInfo = contractService.getContractAddressInfo(chainId, AddressTool.getAddress(contractAddress)).getData();
+            byte[] contractAddressBytes = AddressTool.getAddress(contractAddress);
+            ContractAddressInfoPo contractInfo = contractService.getContractAddressInfo(chainId, contractAddressBytes).getData();
             if (contractInfo == null) {
-                result.setError(new RpcResultError(RpcErrorCode.DATA_NOT_EXISTS));
-                return result;
+                Result contractInfoResult = NulsSDKTool.getContractInfo(contractAddress);
+                if(contractInfoResult.isFailed()) {
+                    result.setError(new RpcResultError(RpcErrorCode.DATA_NOT_EXISTS));
+                    return result;
+                }
+                Map contractInfoMap = (Map) contractInfoResult.getData();
+                String txHash = (String) contractInfoMap.get("createTxHash");
+                String status = (String) contractInfoMap.get("status");
+                if(!"normal".equals(status)) {
+                    result.setError(new RpcResultError(RpcErrorCode.CONTRACT_STATUS_ERROR));
+                    return result;
+                }
+                contractInfo = new ContractAddressInfoPo();
+                contractInfo.setContractAddress(contractAddress);
+                contractInfo.setCreateTxHash(txHash);
+                contractInfo.setStatus(0);
+                contractService.saveContractAddress(chainId, contractAddressBytes, contractInfo);
             }
             result.setResult(contractInfo);
         } catch (Exception e) {
