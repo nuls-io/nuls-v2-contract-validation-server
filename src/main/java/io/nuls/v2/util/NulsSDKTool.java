@@ -38,12 +38,12 @@ import io.nuls.server.utils.JsonRpcUtil;
 public class NulsSDKTool {
 
     public static Result getContractInfo(String contractAddress) {
-        RpcResult rpcResult = JsonRpcUtil.request("getContract", new Object[]{ServerContext.main_chain_id, contractAddress});
+        RpcResult rpcResult = JsonRpcUtil.request("getContract", new Object[]{ServerContext.chain_id, contractAddress});
         return makeResult(rpcResult);
     }
 
     public static Result getTx(String createTxHash) {
-        RpcResult rpcResult = JsonRpcUtil.request("getTx", new Object[]{ServerContext.main_chain_id, createTxHash});
+        RpcResult rpcResult = JsonRpcUtil.request("getTx", new Object[]{ServerContext.chain_id, createTxHash});
         return makeResult(rpcResult);
     }
 

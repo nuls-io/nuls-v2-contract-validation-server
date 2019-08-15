@@ -275,7 +275,7 @@ public class ContractController {
         return result;
     }
 
-    public String checkSourceFile(String path) {
+    private String checkSourceFile(String path) {
         File src = new File(path);
         return recursiveCheck(src.listFiles());
     }

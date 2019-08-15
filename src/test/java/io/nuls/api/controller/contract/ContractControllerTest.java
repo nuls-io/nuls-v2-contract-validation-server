@@ -38,10 +38,10 @@ public class ContractControllerTest extends Base{
         try {
             TimeUnit.SECONDS.sleep(5);
             List<Object> params = new ArrayList<>();
-            String address = "tNULSeBaMyoghhJR8wA46u9B5vAiefYRhVct1Z";
+            String address = "tNULSeBaMxTGgaoyahFfmVLgxPycqWV8PFg8T8";
             File file = new File(BASE + "/contract/code/nrc20_token.zip");
             in = new FileInputStream(file);
-            params.add(ServerContext.main_chain_id);
+            params.add(ServerContext.chain_id);
             params.add(address);
             params.add("mockHeader," + Base64.getEncoder().encodeToString(IOUtils.toByteArray(in)));
 

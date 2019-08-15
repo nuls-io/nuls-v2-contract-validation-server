@@ -1,0 +1,129 @@
+{
+  "info": {
+    "_postman_id": "afdc5c74-dad6-49cc-8c31-40f002423832",
+    "name": "Contract-Validation-Server",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "getContractAddressInfo - getContractAddressInfo",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "value": "application/json;charset=UTF-8",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\"jsonrpc\":\"2.0\",\n\"method\":\"getContractAddressInfo\",\n\"params\":[chainId, contractAddress],\n\"id\":1234\n}\n"
+        },
+        "url": {
+          "raw": "http://192.168.1.127:15151/jsonrpc",
+          "protocol": "http",
+          "host": [
+            "192.168.1.127"
+          ],
+          "port": "15151",
+          "path": [
+            "jsonrpc"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "validateContractCode - validateContractCode",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "value": "application/json;charset=UTF-8",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\"jsonrpc\":\"2.0\",\n\"method\":\"validateContractCode\",\n\"params\":[chainId, contractAddress, fileData],\n\"id\":1234\n}\n"
+        },
+        "url": {
+          "raw": "http://192.168.1.127:15151/jsonrpc",
+          "protocol": "http",
+          "host": [
+            "192.168.1.127"
+          ],
+          "port": "15151",
+          "path": [
+            "jsonrpc"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "getContractCodeTree - getContractCodeTree",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "value": "application/json;charset=UTF-8",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\"jsonrpc\":\"2.0\",\n\"method\":\"getContractCodeTree\",\n\"params\":[chainId, contractAddress],\n\"id\":1234\n}\n"
+        },
+        "url": {
+          "raw": "http://192.168.1.127:15151/jsonrpc",
+          "protocol": "http",
+          "host": [
+            "192.168.1.127"
+          ],
+          "port": "15151",
+          "path": [
+            "jsonrpc"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "getContractCode - getContractCode",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "value": "application/json;charset=UTF-8",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\"jsonrpc\":\"2.0\",\n\"method\":\"getContractCode\",\n\"params\":[chainId, contractAddress, filePath],\n\"id\":1234\n}\n"
+        },
+        "url": {
+          "raw": "http://192.168.1.127:15151/jsonrpc",
+          "protocol": "http",
+          "host": [
+            "192.168.1.127"
+          ],
+          "port": "15151",
+          "path": [
+            "jsonrpc"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

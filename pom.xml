@@ -6,7 +6,7 @@
 
     <groupId>io.nuls.v2</groupId>
     <artifactId>contract-validation-server</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0-beta3</version>
 
     <properties>
         <java.version>1.8</java.version>

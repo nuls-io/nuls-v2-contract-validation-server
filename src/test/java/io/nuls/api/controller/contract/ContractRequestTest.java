@@ -47,8 +47,8 @@ public class ContractRequestTest extends Base{
 
     @Before
     public void before() {
-        ServerContext.main_chain_id = 2;
-        ServerContext.wallet_url = "http://192.168.1.120:15151/";
+        ServerContext.chain_id = 2;
+        ServerContext.wallet_url = "http://192.168.1.127:15151/";
     }
 
     @Test
@@ -56,10 +56,10 @@ public class ContractRequestTest extends Base{
         FileInputStream in=  null;
         try {
             List<Object> params = new ArrayList<>();
-            String address = "tNULSeBaN5LCjGeYeQS7JgyKbbPgQ1BPfNz6iP";
+            String address = "tNULSeBaMxTGgaoyahFfmVLgxPycqWV8PFg8T8";
             File file = new File(BASE + "/contract/code/nrc20_token.zip");
             in = new FileInputStream(file);
-            params.add(ServerContext.main_chain_id);
+            params.add(ServerContext.chain_id);
             params.add(address);
             params.add("mockHeader," + Base64.getEncoder().encodeToString(IOUtils.toByteArray(in)));
 
@@ -81,7 +81,7 @@ public class ContractRequestTest extends Base{
         try {
             List<Object> params = new ArrayList<>();
             String address = "tNULSeBaN5LCjGeYeQS7JgyKbbPgQ1BPfNz6iP";
-            params.add(ServerContext.main_chain_id);
+            params.add(ServerContext.chain_id);
             params.add(address);
 
             RpcResult rpcResult = JsonRpcUtil.request("getContractCodeTree", params);
@@ -101,7 +101,7 @@ public class ContractRequestTest extends Base{
         try {
             List<Object> params = new ArrayList<>();
             String address = "tNULSeBaN5LCjGeYeQS7JgyKbbPgQ1BPfNz6iP";
-            params.add(ServerContext.main_chain_id);
+            params.add(ServerContext.chain_id);
             params.add(address);
             params.add("/contract/code/tNULSeBaN5LCjGeYeQS7JgyKbbPgQ1BPfNz6iP/src/io/nuls/contract/token/SimpleToken.java");
 

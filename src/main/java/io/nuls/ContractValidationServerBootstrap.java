@@ -24,16 +24,19 @@
 package io.nuls;
 
 import io.nuls.contract.constant.ContractConstant;
-import io.nuls.core.core.config.ConfigurationLoader;
 import io.nuls.core.core.ioc.SpringLiteContext;
 import io.nuls.core.parse.ConfigLoader;
 import io.nuls.core.rockdb.service.RocksDBService;
+import io.nuls.model.jsonrpc.RpcResult;
 import io.nuls.server.RpcServerManager;
 import io.nuls.server.ServerContext;
+import io.nuls.server.utils.JsonRpcUtil;
+import io.nuls.server.utils.ListUtil;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.charset.Charset;
+import java.util.Map;
 import java.util.Properties;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -59,20 +62,20 @@ public class ContractValidationServerBootstrap {
         Properties properties = ConfigLoader.loadProperties("cfg.properties");
         serverIP = properties.getProperty("contract.server.ip");
         serverPort = Integer.parseInt(properties.getProperty("contract.server.port"));
-        ServerContext.main_chain_id = Integer.parseInt(properties.getProperty("main_chain_id"));
-        ServerContext.main_asset_id = Integer.parseInt(properties.getProperty("main_asset_id"));
-        ServerContext.nuls_chain_id = Integer.parseInt(properties.getProperty("nuls_chain_id"));
-        ServerContext.nuls_asset_id = Integer.parseInt(properties.getProperty("nuls_asset_id"));
         ServerContext.dataPath = properties.getProperty("db.path");
         String sdkProviderIp = properties.getProperty("sdk.provider.ip");
         int sdkProviderPort = Integer.parseInt(properties.getProperty("sdk.provider.port"));
         ServerContext.wallet_url = String.format("http://%s:%s/", sdkProviderIp, sdkProviderPort);
+        RpcResult info = JsonRpcUtil.request("info", ListUtil.of());
+        Map result = (Map) info.getResult();
+        Integer chainId = (Integer) result.get("chainId");
+        ServerContext.chain_id = chainId != null ? chainId : ServerContext.chain_id;
     }
 
     static void initDB() throws Exception {
         RocksDBService.init(ServerContext.dataPath);
         // 合约地址表
-        RocksDBService.createTable(ContractConstant.DB_NAME_CONTRACT_ADDRESS + "_" + ServerContext.main_chain_id);
+        RocksDBService.createTable(ContractConstant.DB_NAME_CONTRACT_ADDRESS + "_" + ServerContext.chain_id);
     }
 
     /**
