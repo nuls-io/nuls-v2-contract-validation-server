@@ -22,6 +22,12 @@ sdk.provider.port=18004
 
 ### 获取指定合约代码文件内容 - getContractCode
 
+## 接口调试
+
+提供Postman接口调式工具的导入文件(JSON-RPC)，导入后，即可调试接口
+
+[JSON-PRC 接口调试-POSTMAN导入文件](https://github.com/nuls-io/nuls-v2-contract-validation-server/blob/master/documents/contract-validation-server_Postman_JSONPRC.json)
+
 ## Startup
 
 ### Linux 环境(仅支持)
