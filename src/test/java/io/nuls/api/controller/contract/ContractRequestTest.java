@@ -61,7 +61,9 @@ public class ContractRequestTest extends Base{
             in = new FileInputStream(file);
             params.add(ServerContext.chain_id);
             params.add(address);
-            params.add("mockHeader," + Base64.getEncoder().encodeToString(IOUtils.toByteArray(in)));
+            String base64Str = "fileHeader," + Base64.getEncoder().encodeToString(IOUtils.toByteArray(in));
+            System.out.println(base64Str);
+            params.add(base64Str);
 
             RpcResult rpcResult = JsonRpcUtil.request("validateContractCode", params);
             System.out.println(rpcResult);

@@ -45,7 +45,7 @@ public class ContractCodeTreeTest extends Base{
 
     @Test
     public void genTree() {
-        File src = new File(BASE + "/contract/code/tNULSeBaMyoghhJR8wA46u9B5vAiefYRhVct1Z/src");
+        File src = new File(BASE + "/contract/code/tNULSeBaNAGTjvn1iTzbSBStNPRtbtxjja4bts/src");
         ContractCode root = new ContractCode();
         ContractCodeNode rootNode = new ContractCodeNode();
         if(!src.isDirectory()) {
