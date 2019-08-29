@@ -1,11 +1,11 @@
 # NULS智能合约源代码认证服务
 
-## 依赖NULS2.0 SDK-Provider模块
+## 依赖NULS2.0 API模块
 
 在cfg.properties中有以下配置，可根据情况修改以下配置
 
 ```properties
-# 配置SDK-Provider模块的ip和port
+# 配置 NULS-API 模块的ip和port
 sdk.provider.ip=127.0.0.1
 sdk.provider.port=18004
 ```
