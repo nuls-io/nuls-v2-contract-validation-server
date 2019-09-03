@@ -106,16 +106,25 @@ public class ContractController {
             if (contractInfo == null) {
                 Result contractInfoResult = NulsSDKTool.getContractInfo(contractAddress);
                 if(contractInfoResult.isFailed()) {
-                    result.setError(new RpcResultError(RpcErrorCode.DATA_NOT_EXISTS));
+                    // 不存在或者创建失败
+                    contractInfo = new ContractAddressInfoPo();
+                    contractInfo.setContractAddress(contractAddress);
+                    contractInfo.setStatus(-1);
+                    result.setResult(contractInfo);
                     return result;
                 }
                 Map contractInfoMap = (Map) contractInfoResult.getData();
                 String txHash = (String) contractInfoMap.get("createTxHash");
                 String status = (String) contractInfoMap.get("status");
-                if(!"normal".equals(status)) {
-                    result.setError(new RpcResultError(RpcErrorCode.CONTRACT_STATUS_ERROR));
+                if("stop".equals(status)) {
+                    // 合约已删除
+                    contractInfo = new ContractAddressInfoPo();
+                    contractInfo.setContractAddress(contractAddress);
+                    contractInfo.setCreateTxHash(txHash);
+                    contractInfo.setStatus(3);
                     return result;
                 }
+                // 待认证
                 contractInfo = new ContractAddressInfoPo();
                 contractInfo.setContractAddress(contractAddress);
                 contractInfo.setCreateTxHash(txHash);
