@@ -38,8 +38,8 @@ public class ContractControllerTest extends Base{
         try {
             TimeUnit.SECONDS.sleep(5);
             List<Object> params = new ArrayList<>();
-            String address = "tNULSeBaNAGTjvn1iTzbSBStNPRtbtxjja4bts";
-            File file = new File(BASE + "/contract/code/pocm.zip");
+            String address = "tNULSeBaNBWuZw4Z1YCzcPUwtcQkBF5iaisUPz";
+            File file = new File(BASE + "/contract/code/nrc20_locked.zip");
             in = new FileInputStream(file);
             params.add(ServerContext.chain_id);
             params.add(address);

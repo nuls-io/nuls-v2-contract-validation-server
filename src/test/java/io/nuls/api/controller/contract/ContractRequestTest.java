@@ -48,7 +48,8 @@ public class ContractRequestTest extends Base{
     @Before
     public void before() {
         ServerContext.chain_id = 2;
-        ServerContext.wallet_url = "http://192.168.1.127:15151/";
+        //ServerContext.wallet_url = "http://192.168.1.127:15151/";
+        ServerContext.wallet_url = "http://39.98.226.51:18010/";
     }
 
     @Test
@@ -56,8 +57,8 @@ public class ContractRequestTest extends Base{
         FileInputStream in=  null;
         try {
             List<Object> params = new ArrayList<>();
-            String address = "tNULSeBaMxTGgaoyahFfmVLgxPycqWV8PFg8T8";
-            File file = new File(BASE + "/contract/code/nrc20_token.zip");
+            String address = "tNULSeBaNBWuZw4Z1YCzcPUwtcQkBF5iaisUPz";
+            File file = new File(BASE + "/contract/code/nrc20_locked.zip");
             in = new FileInputStream(file);
             params.add(ServerContext.chain_id);
             params.add(address);

@@ -47,7 +47,8 @@ public class PrintSourceCodeBase64String extends Base{
     public void base64() throws FileNotFoundException {
         FileInputStream in=  null;
         try {
-            File file = new File(BASE + "/contract/code/pocm.zip");
+            //File file = new File(BASE + "/contract/code/pocm.zip");
+            File file = new File(BASE + "/contract/code/nrc20_locked.zip");
             in = new FileInputStream(file);
             String base64Str = "fileHeader," + Base64.getEncoder().encodeToString(IOUtils.toByteArray(in));
             System.out.println(base64Str);
