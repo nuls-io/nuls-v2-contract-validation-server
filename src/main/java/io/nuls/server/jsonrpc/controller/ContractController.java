@@ -102,36 +102,38 @@ public class ContractController {
                 return result;
             }
             byte[] contractAddressBytes = AddressTool.getAddress(contractAddress);
-            ContractAddressInfoPo contractInfo = contractService.getContractAddressInfo(chainId, contractAddressBytes).getData();
-            if (contractInfo == null) {
-                Result contractInfoResult = NulsSDKTool.getContractInfo(contractAddress);
-                if(contractInfoResult.isFailed()) {
-                    // 不存在或者创建失败
-                    contractInfo = new ContractAddressInfoPo();
-                    contractInfo.setContractAddress(contractAddress);
-                    contractInfo.setStatus(-1);
-                    result.setResult(contractInfo);
-                    return result;
-                }
-                Map contractInfoMap = (Map) contractInfoResult.getData();
-                String txHash = (String) contractInfoMap.get("createTxHash");
-                String status = (String) contractInfoMap.get("status");
-                if("stop".equals(status)) {
-                    // 合约已删除
-                    contractInfo = new ContractAddressInfoPo();
-                    contractInfo.setContractAddress(contractAddress);
-                    contractInfo.setCreateTxHash(txHash);
-                    contractInfo.setStatus(3);
-                    return result;
-                }
-                // 待认证
+            ContractAddressInfoPo contractInfo = null;
+            Result contractInfoResult = NulsSDKTool.getContractInfo(contractAddress);
+            if(contractInfoResult.isFailed()) {
+                // 不存在或者创建失败
+                contractInfo = new ContractAddressInfoPo();
+                contractInfo.setContractAddress(contractAddress);
+                contractInfo.setStatus(-1);
+                result.setResult(contractInfo);
+                return result;
+            }
+            Map contractInfoMap = (Map) contractInfoResult.getData();
+            String txHash = (String) contractInfoMap.get("createTxHash");
+            String status = (String) contractInfoMap.get("status");
+            if("stop".equals(status)) {
+                // 合约已删除
                 contractInfo = new ContractAddressInfoPo();
                 contractInfo.setContractAddress(contractAddress);
                 contractInfo.setCreateTxHash(txHash);
-                contractInfo.setStatus(0);
-                contractService.saveContractAddress(chainId, contractAddressBytes, contractInfo);
+                contractInfo.setStatus(3);
+                result.setResult(contractInfo);
+                return result;
             }
-            result.setResult(contractInfo);
+            ContractAddressInfoPo contractInfoFromDB = contractService.getContractAddressInfo(chainId, contractAddressBytes).getData();
+            if (contractInfoFromDB == null) {
+                // 待认证
+                contractInfoFromDB = new ContractAddressInfoPo();
+                contractInfoFromDB.setContractAddress(contractAddress);
+                contractInfoFromDB.setCreateTxHash(txHash);
+                contractInfoFromDB.setStatus(0);
+                contractService.saveContractAddress(chainId, contractAddressBytes, contractInfoFromDB);
+            }
+            result.setResult(contractInfoFromDB);
         } catch (Exception e) {
             Log.error(e);
             result.setError(new RpcResultError(RpcErrorCode.PARAMS_ERROR, e.getMessage()));
