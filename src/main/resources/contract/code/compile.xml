@@ -19,7 +19,7 @@
 
     <!-- 编译 -->
     <target name="compile" depends="init">
-        <javac srcdir="${src}" destdir="${dest}/classes" source="1.6" target="1.6"
+        <javac srcdir="${src}" destdir="${dest}/classes"
             debug="${compile.debug}" deprecation="${compile.deprecation}" optimize="${compile.optimize}">
             <compilerarg line="-encoding UTF-8 "/>
             <classpath refid="sdk.path" />
