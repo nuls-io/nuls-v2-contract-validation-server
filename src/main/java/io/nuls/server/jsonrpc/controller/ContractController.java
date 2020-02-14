@@ -40,6 +40,7 @@ import io.nuls.model.contract.ContractCodeNode;
 import io.nuls.model.jsonrpc.RpcErrorCode;
 import io.nuls.model.jsonrpc.RpcResult;
 import io.nuls.model.jsonrpc.RpcResultError;
+import io.nuls.server.ServerContext;
 import io.nuls.server.jsonrpc.JsonRpcException;
 import io.nuls.server.utils.RunShellUtil;
 import io.nuls.server.utils.VerifyUtils;
@@ -96,6 +97,10 @@ public class ContractController {
         try {
             VerifyUtils.verifyParams(params, 2);
             int chainId = (Integer) params.get(0);
+            if(chainId != ServerContext.chain_id) {
+                result.setError(new RpcResultError(RpcErrorCode.PARAMS_ERROR, "[chainId] is inValid"));
+                return result;
+            }
             String contractAddress = (String) params.get(1);
             if (!AddressTool.validAddress(chainId, contractAddress)) {
                 result.setError(new RpcResultError(RpcErrorCode.PARAMS_ERROR, "[contractAddress] is inValid"));
@@ -152,6 +157,10 @@ public class ContractController {
         try {
             VerifyUtils.verifyParams(params, 3);
             int chainId = (Integer) params.get(0);
+            if(chainId != ServerContext.chain_id) {
+                result.setError(new RpcResultError(RpcErrorCode.PARAMS_ERROR, "[chainId] is inValid"));
+                return result;
+            }
             contractAddress = (String) params.get(1);
             if (!AddressTool.validAddress(chainId, contractAddress)) {
                 result.setError(new RpcResultError(RpcErrorCode.PARAMS_ERROR, "contractAddress is inValid."));
@@ -361,6 +370,10 @@ public class ContractController {
         try {
             VerifyUtils.verifyParams(params, 2);
             int chainId = (Integer) params.get(0);
+            if(chainId != ServerContext.chain_id) {
+                result.setError(new RpcResultError(RpcErrorCode.PARAMS_ERROR, "[chainId] is inValid"));
+                return result;
+            }
             String contractAddress = (String) params.get(1);
             if (!AddressTool.validAddress(chainId, contractAddress)) {
                 result.setError(new RpcResultError(RpcErrorCode.PARAMS_ERROR, "[contractAddress] is inValid"));
@@ -456,6 +469,10 @@ public class ContractController {
         try {
             VerifyUtils.verifyParams(params, 3);
             int chainId = (Integer) params.get(0);
+            if(chainId != ServerContext.chain_id) {
+                result.setError(new RpcResultError(RpcErrorCode.PARAMS_ERROR, "[chainId] is inValid"));
+                return result;
+            }
             String contractAddress = (String) params.get(1);
             if (!AddressTool.validAddress(chainId, contractAddress)) {
                 result.setError(new RpcResultError(RpcErrorCode.PARAMS_ERROR, "[contractAddress] is inValid"));
