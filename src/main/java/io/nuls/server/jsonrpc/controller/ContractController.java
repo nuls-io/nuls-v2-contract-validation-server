@@ -158,7 +158,7 @@ public class ContractController {
             VerifyUtils.verifyParams(params, 3);
             int chainId = (Integer) params.get(0);
             if(chainId != ServerContext.chain_id) {
-                result.setError(new RpcResultError(RpcErrorCode.PARAMS_ERROR, "[chainId] is inValid"));
+                result.setError(new RpcResultError(RpcErrorCode.PARAMS_ERROR, String.format("chainId is inValid, from paramter chainId: %s, current server chainId: %s", chainId, ServerContext.chain_id)));
                 return result;
             }
             contractAddress = (String) params.get(1);

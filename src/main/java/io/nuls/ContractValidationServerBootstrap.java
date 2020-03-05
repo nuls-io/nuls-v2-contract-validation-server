@@ -25,6 +25,7 @@ package io.nuls;
 
 import io.nuls.contract.constant.ContractConstant;
 import io.nuls.core.core.ioc.SpringLiteContext;
+import io.nuls.core.log.Log;
 import io.nuls.core.parse.ConfigLoader;
 import io.nuls.core.rockdb.service.RocksDBService;
 import io.nuls.model.jsonrpc.RpcResult;
@@ -68,8 +69,10 @@ public class ContractValidationServerBootstrap {
         ServerContext.wallet_url = String.format("http://%s:%s/", sdkProviderIp, sdkProviderPort);
         RpcResult info = JsonRpcUtil.request("info", ListUtil.of());
         Map result = (Map) info.getResult();
+        Log.info("config chain info: {}", result);
         Integer chainId = (Integer) result.get("chainId");
         ServerContext.chain_id = chainId != null ? chainId : ServerContext.chain_id;
+
     }
 
     static void initDB() throws Exception {
