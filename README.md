@@ -40,12 +40,11 @@ sdk.provider.port=18004
     
 - 解压
 
-      $ cd target
-      $ tar -xzf contract-validation-server.tar.gz
+      $ cd target && mkdir contract-validation-server && mv contract-validation-server.tar.gz contract-validation-server/
+      $ cd contract-validation-server && tar -xzf contract-validation-server.tar.gz
     
 - 构建镜像 
 
-      $ cd contract-validation-server
       $ ./make_image.sh
     
 - 启动应用

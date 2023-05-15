@@ -78,6 +78,9 @@ public class ContractAddressStorageServiceImpl implements ContractAddressStorage
 
     @Override
     public ContractVerifyPo getCodeHashVerified(int chainId, String codeHash) throws Exception {
+        if (StringUtils.isBlank(codeHash)) {
+            return null;
+        }
         ContractVerifyPo po = ContractDBUtil.getModel(baseAreaCodeHash + chainId, HexUtil.decode(codeHash), ContractVerifyPo.class);
         return po;
     }
