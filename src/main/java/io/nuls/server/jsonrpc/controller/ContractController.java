@@ -144,6 +144,7 @@ public class ContractController {
                 ContractVerifyPo verifiedContract = contractService.getCodeHashVerified(chainId, codeHash);
                 boolean codeHashVerified = verifiedContract != null;
                 if (codeHashVerified) {
+                    contractInfoFromDB.setCertificationTime(verifiedContract.getCertificationTime());
                     contractInfoFromDB.setStatus(2);
                 }
                 contractService.saveContractAddress(chainId, contractAddressBytes, contractInfoFromDB);
@@ -210,6 +211,7 @@ public class ContractController {
                 ContractVerifyPo verifiedContract = contractService.getCodeHashVerified(chainId, codeHash);
                 boolean codeHashVerified = verifiedContract != null;
                 if (codeHashVerified) {
+                    contractInfo.setCertificationTime(verifiedContract.getCertificationTime());
                     contractInfo.setStatus(2);
                 }
                 contractService.saveContractAddress(chainId, contractAddressBytes, contractInfo);
@@ -429,7 +431,7 @@ public class ContractController {
                 }
             }
             // 提取文件目录树
-            ContractCode root = contractCodeTreeCaches.get(contractAddress);
+            ContractCode root = contractCodeTreeCaches.get(fileContract);
             if (root == null) {
                 result.setError(new RpcResultError(RpcErrorCode.PARAMS_ERROR, "root path is inValid"));
                 return result;

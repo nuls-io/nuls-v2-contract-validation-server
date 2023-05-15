@@ -37,6 +37,8 @@ import io.nuls.core.rockdb.service.RocksDBService;
 import io.nuls.model.contract.ContractAddressInfoPo;
 import io.nuls.model.contract.ContractVerifyPo;
 
+import java.nio.charset.StandardCharsets;
+
 import static io.nuls.contract.constant.ContractConstant.*;
 
 /**
@@ -48,7 +50,7 @@ import static io.nuls.contract.constant.ContractConstant.*;
 public class ContractAddressStorageServiceImpl implements ContractAddressStorageService {
 
     private final String baseArea = DB_NAME_CONTRACT_ADDRESS + "_";
-    private final String baseAreaCodeHash = DB_NAME_CONTRACT_ADDRESS_CODE_HASH + "_";
+    private final String keyCodeHash = "CODE_HASH_";
 
     @Override
     public Result saveContractAddress(int chainId, byte[] contractAddressBytes, ContractAddressInfoPo info) throws Exception {
@@ -68,12 +70,12 @@ public class ContractAddressStorageServiceImpl implements ContractAddressStorage
 
     @Override
     public void saveCodeHashVerified(int chainId, String codeHash, String contract) throws Exception {
-        byte[] hashBytes = HexUtil.decode(codeHash);
-        byte[] bytes = RocksDBService.get(baseAreaCodeHash + chainId, hashBytes);
+        byte[] hashBytes = (keyCodeHash + codeHash).getBytes(StandardCharsets.UTF_8);
+        byte[] bytes = RocksDBService.get(baseArea + chainId, hashBytes);
         if (bytes != null) {
             return;
         }
-        ContractDBUtil.putModel(baseAreaCodeHash + chainId, hashBytes, new ContractVerifyPo(contract, System.currentTimeMillis()));
+        ContractDBUtil.putModel(baseArea + chainId, hashBytes, new ContractVerifyPo(contract, System.currentTimeMillis()));
     }
 
     @Override
@@ -81,7 +83,8 @@ public class ContractAddressStorageServiceImpl implements ContractAddressStorage
         if (StringUtils.isBlank(codeHash)) {
             return null;
         }
-        ContractVerifyPo po = ContractDBUtil.getModel(baseAreaCodeHash + chainId, HexUtil.decode(codeHash), ContractVerifyPo.class);
+        byte[] hashBytes = (keyCodeHash + codeHash).getBytes(StandardCharsets.UTF_8);
+        ContractVerifyPo po = ContractDBUtil.getModel(baseArea + chainId, hashBytes, ContractVerifyPo.class);
         return po;
     }
 
