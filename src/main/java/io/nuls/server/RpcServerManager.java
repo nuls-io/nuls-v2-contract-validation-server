@@ -92,7 +92,7 @@ public class RpcServerManager {
         try {
             ClassLoader loader = this.getClass().getClassLoader();
             httpServer.start();
-            Log.info("http server is started!url is " + serverURI.toString());
+            Log.info("http server is started!url is :: " + serverURI.toString());
         } catch (IOException e) {
             Log.error(e);
             httpServer.shutdownNow();
