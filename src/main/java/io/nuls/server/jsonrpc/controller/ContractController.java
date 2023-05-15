@@ -137,6 +137,7 @@ public class ContractController {
             if (contractInfoFromDB == null) {
                 // 待认证
                 contractInfoFromDB = new ContractAddressInfoPo();
+                contractInfoFromDB.setCodeHash(codeHash);
                 contractInfoFromDB.setContractAddress(contractAddress);
                 contractInfoFromDB.setCreateTxHash(txHash);
                 contractInfoFromDB.setStatus(0);
@@ -150,6 +151,7 @@ public class ContractController {
                 ContractVerifyPo verifiedContract = contractService.getCodeHashVerified(chainId, codeHash);
                 boolean codeHashVerified = verifiedContract != null;
                 if (codeHashVerified) {
+                    contractInfoFromDB.setCodeHash(codeHash);
                     contractInfoFromDB.setStatus(2);
                     contractInfoFromDB.setCertificationTime(verifiedContract.getCertificationTime());
                     contractService.saveContractAddress(chainId, contractAddressBytes, contractInfoFromDB);
