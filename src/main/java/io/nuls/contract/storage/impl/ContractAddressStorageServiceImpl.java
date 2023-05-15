@@ -24,16 +24,20 @@
 package io.nuls.contract.storage.impl;
 
 
+import io.nuls.base.basic.AddressTool;
 import io.nuls.contract.storage.ContractAddressStorageService;
 import io.nuls.contract.utils.ContractDBUtil;
 import io.nuls.contract.utils.ContractUtil;
 import io.nuls.core.basic.Result;
 import io.nuls.core.constant.CommonCodeConstanst;
 import io.nuls.core.core.annotation.Component;
+import io.nuls.core.crypto.HexUtil;
+import io.nuls.core.model.StringUtils;
 import io.nuls.core.rockdb.service.RocksDBService;
 import io.nuls.model.contract.ContractAddressInfoPo;
+import io.nuls.model.contract.ContractVerifyPo;
 
-import static io.nuls.contract.constant.ContractConstant.DB_NAME_CONTRACT_ADDRESS;
+import static io.nuls.contract.constant.ContractConstant.*;
 
 /**
  * @desription:
@@ -44,11 +48,15 @@ import static io.nuls.contract.constant.ContractConstant.DB_NAME_CONTRACT_ADDRES
 public class ContractAddressStorageServiceImpl implements ContractAddressStorageService {
 
     private final String baseArea = DB_NAME_CONTRACT_ADDRESS + "_";
-    
+    private final String baseAreaCodeHash = DB_NAME_CONTRACT_ADDRESS_CODE_HASH + "_";
+
     @Override
-    public Result saveContractAddress(int chainId, byte[] contractAddressBytes, ContractAddressInfoPo info) {
+    public Result saveContractAddress(int chainId, byte[] contractAddressBytes, ContractAddressInfoPo info) throws Exception {
         if (contractAddressBytes == null || info == null) {
             return Result.getFailed(CommonCodeConstanst.NULL_PARAMETER);
+        }
+        if (info.getStatus().intValue() == 2 && StringUtils.isNotBlank(info.getCodeHash())) {
+            this.saveCodeHashVerified(chainId, info.getCodeHash(), info.getContractAddress());
         }
         boolean result = ContractDBUtil.putModel(baseArea + chainId, contractAddressBytes, info);
         if (result) {
@@ -56,6 +64,22 @@ public class ContractAddressStorageServiceImpl implements ContractAddressStorage
         } else {
             return ContractUtil.getFailed();
         }
+    }
+
+    @Override
+    public void saveCodeHashVerified(int chainId, String codeHash, String contract) throws Exception {
+        byte[] hashBytes = HexUtil.decode(codeHash);
+        byte[] bytes = RocksDBService.get(baseAreaCodeHash + chainId, hashBytes);
+        if (bytes != null) {
+            return;
+        }
+        ContractDBUtil.putModel(baseAreaCodeHash + chainId, hashBytes, new ContractVerifyPo(contract, System.currentTimeMillis()));
+    }
+
+    @Override
+    public ContractVerifyPo getCodeHashVerified(int chainId, String codeHash) throws Exception {
+        ContractVerifyPo po = ContractDBUtil.getModel(baseAreaCodeHash + chainId, HexUtil.decode(codeHash), ContractVerifyPo.class);
+        return po;
     }
 
     @Override

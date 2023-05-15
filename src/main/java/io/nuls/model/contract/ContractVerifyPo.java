@@ -23,29 +23,22 @@
  */
 package io.nuls.model.contract;
 
-import java.math.BigInteger;
-
 /**
  * @author: PierreLuo
  * @date: 2018/8/15
  */
-public class ContractAddressInfoPo {
+public class ContractVerifyPo {
 
     private String contractAddress;
 
-    private String createTxHash;
-
-    /**
-     *  0未认证 1正在审核 2通过验证
-     */
-    private Integer status;
-
     private Long certificationTime;
 
-    private String codeHash;
+    public ContractVerifyPo() {
+    }
 
-    public ContractAddressInfoPo() {
-
+    public ContractVerifyPo(String contractAddress, Long certificationTime) {
+        this.contractAddress = contractAddress;
+        this.certificationTime = certificationTime;
     }
 
     public String getContractAddress() {
@@ -56,22 +49,6 @@ public class ContractAddressInfoPo {
         this.contractAddress = contractAddress == null ? null : contractAddress.trim();
     }
 
-    public String getCreateTxHash() {
-        return createTxHash;
-    }
-
-    public void setCreateTxHash(String createTxHash) {
-        this.createTxHash = createTxHash == null ? null : createTxHash.trim();
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
     public Long getCertificationTime() {
         return certificationTime;
     }
@@ -80,11 +57,4 @@ public class ContractAddressInfoPo {
         this.certificationTime = certificationTime;
     }
 
-    public String getCodeHash() {
-        return codeHash;
-    }
-
-    public void setCodeHash(String codeHash) {
-        this.codeHash = codeHash;
-    }
 }

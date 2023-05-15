@@ -37,6 +37,7 @@ import io.nuls.core.model.StringUtils;
 import io.nuls.model.contract.ContractAddressInfoPo;
 import io.nuls.model.contract.ContractCode;
 import io.nuls.model.contract.ContractCodeNode;
+import io.nuls.model.contract.ContractVerifyPo;
 import io.nuls.model.jsonrpc.RpcErrorCode;
 import io.nuls.model.jsonrpc.RpcResult;
 import io.nuls.model.jsonrpc.RpcResultError;
@@ -56,6 +57,8 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -136,7 +139,20 @@ public class ContractController {
                 contractInfoFromDB.setContractAddress(contractAddress);
                 contractInfoFromDB.setCreateTxHash(txHash);
                 contractInfoFromDB.setStatus(0);
+                ContractVerifyPo verifiedContract = contractService.getCodeHashVerified(chainId, contractInfo.getCodeHash());
+                boolean codeHashVerified = verifiedContract != null;
+                if (codeHashVerified) {
+                    contractInfoFromDB.setStatus(2);
+                }
                 contractService.saveContractAddress(chainId, contractAddressBytes, contractInfoFromDB);
+            } else if (contractInfoFromDB.getStatus().intValue() != 2) {
+                ContractVerifyPo verifiedContract = contractService.getCodeHashVerified(chainId, contractInfo.getCodeHash());
+                boolean codeHashVerified = verifiedContract != null;
+                if (codeHashVerified) {
+                    contractInfoFromDB.setStatus(2);
+                    contractInfoFromDB.setCertificationTime(verifiedContract.getCertificationTime());
+                    contractService.saveContractAddress(chainId, contractAddressBytes, contractInfoFromDB);
+                }
             }
             result.setResult(contractInfoFromDB);
         } catch (Exception e) {
@@ -176,17 +192,27 @@ public class ContractController {
                     return result;
                 }
                 Map contractInfoMap = (Map) contractInfoResult.getData();
-                String txHash = (String) contractInfoMap.get("createTxHash");
                 String status = (String) contractInfoMap.get("status");
                 if(!"normal".equals(status)) {
                     result.setError(new RpcResultError(RpcErrorCode.CONTRACT_STATUS_ERROR));
                     return result;
                 }
+                String codeHash = (String) contractInfoMap.get("codeHash");
+                String txHash = (String) contractInfoMap.get("createTxHash");
                 contractInfo = new ContractAddressInfoPo();
                 contractInfo.setContractAddress(contractAddress);
                 contractInfo.setCreateTxHash(txHash);
+                contractInfo.setCodeHash(codeHash);
                 contractInfo.setStatus(0);
+                ContractVerifyPo verifiedContract = contractService.getCodeHashVerified(chainId, codeHash);
+                boolean codeHashVerified = verifiedContract != null;
+                if (codeHashVerified) {
+                    contractInfo.setStatus(2);
+                }
                 contractService.saveContractAddress(chainId, contractAddressBytes, contractInfo);
+                if (codeHashVerified) {
+                    return result;
+                }
             }
 
             Integer status = contractInfo.getStatus();
@@ -391,6 +417,14 @@ public class ContractController {
                 return result;
             }
 
+            String fileContract = contractAddress;
+            String codeHash = contractInfo.getCodeHash();
+            if (StringUtils.isNotBlank(codeHash)) {
+                ContractVerifyPo codeHashVerified = contractService.getCodeHashVerified(chainId, codeHash);
+                if (codeHashVerified != null) {
+                    fileContract = codeHashVerified.getContractAddress();
+                }
+            }
             // 提取文件目录树
             ContractCode root = contractCodeTreeCaches.get(contractAddress);
             if (root == null) {
@@ -518,6 +552,7 @@ public class ContractController {
     private String readContractCode(String filePath) {
         FileInputStream in = null;
         try {
+            filePath = getFilePath(filePath);
             File file = new File(BASE + filePath);
             if (!file.exists()) {
                 return null;
@@ -535,6 +570,25 @@ public class ContractController {
         } finally {
             IOUtils.closeQuietly(in);
         }
+    }
+
+    private static String getFilePath(String path){
+        String regex = "[`~!@#$%^&*()\\+\\=||{}|:\"?><【】]";
+
+        Pattern pa = Pattern.compile(regex);
+
+        Matcher ma = pa.matcher(path);
+
+        if(ma.find()){
+            path = ma.replaceAll("").trim();
+        }
+
+        path = path.replace("\\","/");
+        path = path.replace("../", "");
+        path = path.replaceAll("\\s+","");
+
+        return path;
+
     }
 
 }

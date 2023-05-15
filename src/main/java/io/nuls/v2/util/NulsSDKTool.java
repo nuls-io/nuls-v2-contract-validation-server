@@ -47,6 +47,11 @@ public class NulsSDKTool {
         return makeResult(rpcResult);
     }
 
+    public static Result getContractCodeHash(String contractAddress) {
+        RpcResult rpcResult = JsonRpcUtil.request("codeHash", new Object[]{ServerContext.chain_id, contractAddress});
+        return makeResult(rpcResult);
+    }
+
     static Result makeResult(RpcResult rpcResult) {
         RpcResultError error = rpcResult.getError();
         if(error != null) {

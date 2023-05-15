@@ -25,6 +25,7 @@ package io.nuls.contract.storage;
 
 import io.nuls.core.basic.Result;
 import io.nuls.model.contract.ContractAddressInfoPo;
+import io.nuls.model.contract.ContractVerifyPo;
 
 import java.util.List;
 
@@ -40,8 +41,11 @@ public interface ContractAddressStorageService {
      * @param hash
      * @return
      */
-    Result saveContractAddress(int chainId, byte[] contractAddressBytes, ContractAddressInfoPo info);
+    Result saveContractAddress(int chainId, byte[] contractAddressBytes, ContractAddressInfoPo info) throws Exception;
 
+    void saveCodeHashVerified(int chainId, String codeHash, String contract) throws Exception;
+
+    ContractVerifyPo getCodeHashVerified(int chainId, String codeHash) throws Exception;
     /**
      * 获取创建合约的合约信息 - 创建者、创建交易hash、创建时间
      *

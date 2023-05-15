@@ -30,10 +30,8 @@ package io.nuls.contract.constant;
  * @author: PierreLuo
  */
 public interface ContractConstant {
-
-
     String DB_NAME_CONTRACT_ADDRESS = "contract_address";
-
+    String DB_NAME_CONTRACT_ADDRESS_CODE_HASH = "contract_address_code_hash";
     String SYS_FILE_ENCODING = "file.encoding";
-
+    byte[] EMPTY_BYTES = new byte[]{0};
 }
