@@ -123,6 +123,7 @@ public class ContractController {
             Map contractInfoMap = (Map) contractInfoResult.getData();
             String txHash = (String) contractInfoMap.get("createTxHash");
             String status = (String) contractInfoMap.get("status");
+            String codeHash = (String) contractInfoMap.get("codeHash");
             if("stop".equals(status)) {
                 // 合约已删除
                 contractInfo = new ContractAddressInfoPo();
@@ -136,19 +137,21 @@ public class ContractController {
             if (contractInfoFromDB == null) {
                 // 待认证
                 contractInfoFromDB = new ContractAddressInfoPo();
+                contractInfoFromDB.setCodeHash(codeHash);
                 contractInfoFromDB.setContractAddress(contractAddress);
                 contractInfoFromDB.setCreateTxHash(txHash);
                 contractInfoFromDB.setStatus(0);
-                ContractVerifyPo verifiedContract = contractService.getCodeHashVerified(chainId, contractInfo.getCodeHash());
+                ContractVerifyPo verifiedContract = contractService.getCodeHashVerified(chainId, codeHash);
                 boolean codeHashVerified = verifiedContract != null;
                 if (codeHashVerified) {
                     contractInfoFromDB.setStatus(2);
                 }
                 contractService.saveContractAddress(chainId, contractAddressBytes, contractInfoFromDB);
             } else if (contractInfoFromDB.getStatus().intValue() != 2) {
-                ContractVerifyPo verifiedContract = contractService.getCodeHashVerified(chainId, contractInfo.getCodeHash());
+                ContractVerifyPo verifiedContract = contractService.getCodeHashVerified(chainId, codeHash);
                 boolean codeHashVerified = verifiedContract != null;
                 if (codeHashVerified) {
+                    contractInfoFromDB.setCodeHash(codeHash);
                     contractInfoFromDB.setStatus(2);
                     contractInfoFromDB.setCertificationTime(verifiedContract.getCertificationTime());
                     contractService.saveContractAddress(chainId, contractAddressBytes, contractInfoFromDB);
