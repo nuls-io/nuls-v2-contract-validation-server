@@ -9,7 +9,7 @@
 
     <path id="sdk.path">
         <!-- 项目部署路径动态传入 -->
-        <pathelement location="${deploy_home}/contract/sdk-contract-vm-2.0.jar" />
+        <pathelement location="${deploy_home}/contract/sdk-contract-vm-2.3.1.jar" />
     </path>
 
     <!-- 初始化 -->
