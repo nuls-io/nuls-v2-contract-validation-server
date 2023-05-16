@@ -268,17 +268,14 @@ public class ContractController {
                 byte[] validateContractCode = IOUtils.toByteArray(jarIn);
 
                 // 获取智能合约的代码
-                String createTxHash = contractInfo.getCreateTxHash();
-                Result result1 = NulsSDKTool.getTx(createTxHash);
+                Result result1 = NulsSDKTool.getContractCode(contractAddress);
                 if (result1.isFailed()) {
                     result.setError(new RpcResultError(RpcErrorCode.DATA_NOT_EXISTS));
                     break;
                 }
                 Map txMap = (Map) result1.getData();
-                String txDataHex = (String) txMap.get("txDataHex");
-                CreateContractData txData = new CreateContractData();
-                txData.parse(new NulsByteBuffer(HexUtil.decode(txDataHex)));
-                byte[] contractCode = txData.getCode();
+                String codeHex = (String) txMap.get("result");
+                byte[] contractCode = HexUtil.decode(codeHex);
 
                 // 比较代码指令
                 isValidationPass = CompareJar.compareJarBytes(contractCode, validateContractCode);
