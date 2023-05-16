@@ -66,7 +66,7 @@ public class ContractValidationServerBootstrap {
         ServerContext.dataPath = properties.getProperty("db.path");
         String sdkProviderIp = properties.getProperty("sdk.provider.ip");
         int sdkProviderPort = Integer.parseInt(properties.getProperty("sdk.provider.port"));
-        ServerContext.wallet_url = String.format("%s://%s:%s/", sdkProviderPort == 80 ? "http" : "https", sdkProviderIp, sdkProviderPort);
+        ServerContext.wallet_url = String.format("%s://%s:%s/", sdkProviderPort == 443 ? "https" : "http", sdkProviderIp, sdkProviderPort);
         RpcResult info = JsonRpcUtil.request("info", ListUtil.of());
         Map result = (Map) info.getResult();
         Log.info("config chain info: {}", result);

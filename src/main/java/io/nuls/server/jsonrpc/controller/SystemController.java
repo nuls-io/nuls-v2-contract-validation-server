@@ -36,7 +36,7 @@ public class SystemController {
 
     @RpcMethod("getSystemInfo")
     public RpcResult getHeaderByHeight(List<Object> params) {
-        return RpcResult.success("jsonrpc ok! version: 051601");
+        return RpcResult.success("jsonrpc ok! version: 051602");
     }
 
 }
