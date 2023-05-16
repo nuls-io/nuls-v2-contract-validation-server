@@ -220,12 +220,12 @@ public class ContractController {
                 }
             }
 
-            /*Integer status = contractInfo.getStatus();
+            Integer status = contractInfo.getStatus();
             // 已进入以下状态 -> 正在审核 or 通过验证 or 已删除
             if (status > 0) {
                 result.setError(new RpcResultError(RpcErrorCode.CONTRACT_VALIDATION_ERROR));
                 return result;
-            }*/
+            }
 
             // 生成文件
             String fileDataURL = (String) params.get(2);
